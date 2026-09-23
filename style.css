@@ -277,7 +277,7 @@ form > .btn.primary { width: 100%; margin-top: 20px; font-size: 1.1rem; padding:
 .sb-item:first-child { font-weight: 500; }
 .sb-label { padding: 16px 10px 6px; font-size: 12px; color: var(--a-muted); }
 .sb-list { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.sb-hist { padding: 7px 10px; border-radius: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hist { padding: 6px 10px; border-radius: 10px; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* smaller than the sidebar's base size so longer chat titles still fit on one line */
 .sb-hist.current { background: var(--a-hover); }
 .sb-user { display: flex; align-items: center; gap: 10px; padding: 10px 8px 4px; border-top: 1px solid var(--a-line); }
 .sb-user small { display: block; font-size: 11px; color: var(--a-muted); line-height: 1.2; }
