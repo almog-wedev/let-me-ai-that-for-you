@@ -32,6 +32,8 @@ const ICON_PATHS = {
   compass: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM15.5 8.5l-2 5-5 2 2-5z',
   x: 'M6 6l12 12M18 6L6 18',
   bookmark: 'M6 3h12v18l-6-4-6 4z',
+  pause: 'M7 4h4v16H7zM13 4h4v16h-4z',
+  play: 'M6 3l15 9-15 9z',
 };
 
 /** Render a stroke icon by name. */

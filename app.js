@@ -9,6 +9,26 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 let lang = STRINGS[params.get('lang')] ? params.get('lang') : (navigator.language || '').startsWith('he') ? 'he' : 'en';
 
+// ---- Pause support (play mode) ----
+// One flag + a list of "resolve me on resume" callbacks. `pausableWait` is used in place of
+// plain `sleep` throughout the animation, so every await in the sequence honors the pause.
+let paused = false;
+let resumeWaiters = [];
+const waitForResume = () => new Promise(resolve => resumeWaiters.push(resolve));
+const releasePause = () => { const waiters = resumeWaiters; resumeWaiters = []; waiters.forEach(fn => fn()); };
+
+/** Sleep for `ms`, freezing the countdown while `paused` (checked every 100ms so a pause takes effect quickly). */
+async function pausableWait(ms) {
+  let remaining = ms;
+  while (remaining > 0) {
+    if (paused) { await waitForResume(); continue; }
+    const chunk = Math.min(remaining, 100);
+    const start = performance.now();
+    await sleep(chunk);
+    if (!paused) remaining -= performance.now() - start; // don't burn time that elapsed while paused
+  }
+}
+
 /** Translate a key, filling {placeholders}. Arrays return a random entry. */
 function t(key, vars = {}) {
   const s = STRINGS[lang][key];
@@ -225,7 +245,7 @@ async function initPlay(id, prompt) {
   const p = PROVIDERS[id];
   const isTerm = p.kind === 'terminal';
   const vars = { ai: p.name, site: p.site, placeholder: p.placeholder };
-  const wait = sleep; // reading time stays the same with reduced motion; only movement is shortened
+  const wait = pausableWait; // reading time stays the same with reduced motion; only movement is shortened
   const stage = $('stage'), cursor = $('cursor');
   const cursorPos = { x: 0, y: 0 };
   let skipped = false;
@@ -317,7 +337,23 @@ async function initPlay(id, prompt) {
     });
   };
 
-  $('skipBtn').addEventListener('click', () => { skipped = true; showFinal(p, prompt, vars); });
+  /** Pause/resume every running animation (cursor glide, CSS loops, the composer's FLIP transition) via the WAAPI registry. */
+  const setPaused = next => {
+    paused = next;
+    document.getAnimations().forEach(a => (next ? a.pause() : a.play()));
+    $('pauseBtn').classList.toggle('is-paused', next);
+    $('pauseBtn').setAttribute('aria-label', t(next ? 'resume' : 'pause'));
+    $('pauseBtn').innerHTML = icon(next ? 'play' : 'pause', 18);
+    if (!next) releasePause(); // wake up any wait() stuck at waitForResume()
+  };
+  setPaused(false);
+  $('pauseBtn').addEventListener('click', () => setPaused(!paused));
+
+  $('skipBtn').addEventListener('click', () => {
+    skipped = true;
+    if (paused) setPaused(false); // don't leave the sequence's dangling promise frozen forever
+    showFinal(p, prompt, vars);
+  });
 
   /** Park the cursor in the middle of the window (measured right before the first move, once layout is settled). */
   const parkCursor = () => {
@@ -446,6 +482,7 @@ function showFinal(p, prompt, vars) {
   if (!$('final').hidden) return;
   $('final').hidden = false;
   $('skipBtn').hidden = true;
+  $('pauseBtn').hidden = true;
   $('finalTitle').textContent = t('finalTitle');
   $('finalSub').textContent = t('finalSub');
   confetti();

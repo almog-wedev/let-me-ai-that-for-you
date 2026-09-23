@@ -9,35 +9,61 @@
 //   tools     composer buttons on the left, toolsRight on the right (before send) as [icon, label]
 //   chips     suggestion pills under the composer
 
-/** Fake sidebar history, grouped by type. Each visit mixes one entry per type (round-robin) so it's different every time. */
+/**
+ * Fake sidebar history, grouped by type. Each visit mixes entries across types (round-robin) so it's different
+ * every time. Kept short (~30 chars) since the sidebar truncates with an ellipsis past that.
+ */
 const HISTORY_POOL = {
   silly: [
-    'Is cereal a soup?', 'Can I legally marry my air fryer', 'Is a hot dog a sandwich (final answer)',
-    'How many ducks is too many ducks', 'Can a goldfish get depressed', 'Is it rude to high-five a waiter',
-    'Why does my cat stare at the wall', 'Rank every potato by personality', 'Can pigeons be bribed',
+    'Is cereal a soup?', 'Is a hot dog a sandwich', 'Can I marry my air fryer', 'Do ducks have knees',
+    'Can pigeons be bribed', 'Is soup a beverage', 'Why do my socks vanish', 'Rank potatoes by vibe',
+    'Can cats be sued', 'Is water just wet air', 'Can I return a haircut', 'Do squirrels need a union',
+    'Is a taco a sandwich', 'Can I befriend a pigeon', 'Do fish have belly buttons', 'Is my toaster judging me',
+    'Can dogs smell Wednesdays', 'Is a hoodie formalwear', 'Why is my cat plotting', 'Can geese be reasoned with',
+    'Is a wrap just a burrito', 'Do bees have feelings', 'Can I train a raccoon', 'Is a bagel a donut',
+    'Why do birds hate me', 'Can I microwave a spoon', 'Is a hot dog a taco too', 'Do cats know they’re cats',
+    'Can I un-adopt a cactus', 'Is my Roomba judging me',
   ],
   lazy: [
-    'How to boil water (step by step)', 'Summarize this 2-line email', 'Is today Tuesday?',
-    'Reply “ok” to my boss but professional', 'How to open a PDF', 'Write a text to my mom for me',
-    'What is 7 + 5 (no calculator)', 'Read my own resume back to me', 'How to microwave ice cream',
+    'Boil water, step by step', 'Is today Tuesday', 'Reply “ok” but professional', 'Open a PDF for me',
+    'Text my mom for me', '7 + 5, no calculator', 'Read my resume back to me', 'Microwave ice cream, how',
+    'Turn my laptop off', 'What time is it right now', 'Unmute me on Zoom', 'Screenshot this for me',
+    'Unzip a file, please', 'Restart my router. Again.', 'Set a timer, lazily', 'Reply to “k” for me',
+    'Write my grocery list', 'Summarize this 2-line email', 'Explain the group chat', 'Do my math homework',
+    'Write “happy birthday”, longer', 'Read the terms for me', 'Tell me what’s for dinner',
   ],
   dark: [
-    'Write my will but passive-aggressive', 'Houseplant died again. Am I a murderer?', 'Eulogy for my will to live',
-    'How to fake my own death to skip a meeting', 'Is it too late to haunt my ex', 'Signs my coworker is a vampire',
-    'Will my plants testify against me', 'Explain death to my goldfish (again)', 'Best alibi for eating roommate’s leftovers',
-    'Is my landlord legally a ghost', 'How long until my inbox becomes sentient',
+    'Write my will, petty', 'My plant died. Again.', 'Fake my death, quick', 'Is it too late to haunt my ex',
+    'Is my landlord a ghost', 'Eulogy for my will to live', 'Alibi for eating leftovers', 'Is my coworker a vampire',
+    'Will my plants snitch', 'Is my Roomba plotting', 'Ransom-note resignation', 'Obituary for my motivation',
+    'Am I the villain here', 'Explain death to my fish', 'Is 3am me a different person', 'Sorry letter to a dead plant',
+    'Is my toaster sentient', 'Bury my to-do list', 'Explain ghosting, literally', 'Draft my own eulogy, mean',
+    'Is my inbox alive now', 'Curse my printer, formally', 'Explain haunting, for beginners',
   ],
   tech: [
-    'Why is my code not working', 'Is pushing to prod on Friday a crime', 'Center a div (attempt 47)',
-    'Undo git push --force (URGENT!!!)', 'Does my laptop hate me personally', 'Explain “it works on my machine” to my boss',
+    'Why is my code broken', 'Center a div, attempt 47', 'Undo git push --force', 'My laptop hates me',
+    'Works on my machine, why', 'console.log fixed it, why', 'Off and on again, real fix?', 'Explain merge conflicts',
+    'node_modules fixed it', 'Explain recursion, really', 'Too many tabs, be honest', 'Explain the cloud, simply',
+    'Bug or feature, you decide', 'Stack Overflow: a skill?', 'Why did that just work',
   ],
   life: [
-    'Polite email to my landlord (not polite)', 'Best excuse for being late (again)', 'How to adult, beginner level',
-    'Can dogs eat pizza crust', 'Am I the drama?', 'Is 3pm too early for pajamas', 'How to leave a party without saying bye',
+    'Email my landlord, mean', 'Best excuse, I’m late', 'How to adult, beginner', 'Fold a fitted sheet',
+    'Fake a call, escape now', 'Say no, fifth time today', 'Un-invite myself, help', 'Survive small talk',
+    'Is napping this much bad', 'Leave a party, no bye', 'Seem busy in meetings', 'Answer “what do you do”',
+    'Can dogs eat pizza crust', 'Is 3pm too early for pjs', 'Adult friends, how do',
   ],
   existential: [
-    'Are we living in a simulation', 'Do fish know they’re wet', 'Why am I like this',
-    'What if I’m the NPC', 'Meaning of life in 5 words or less', 'Is my microwave judging me',
+    'Are we in a simulation', 'Do fish know they’re wet', 'Why am I like this', 'Am I the NPC here',
+    'Meaning of life, 5 words', 'Main character or side', 'Is time even real', '2am me makes bad calls',
+    'Overthinking: a hobby?', 'Nostalgia vs regret, explain', 'Is my microwave judging me', 'What if I’m the bad guy',
+  ],
+  petty: [
+    'Win an argument I lost', 'Text I’ll never send', 'One-up my sibling, how', 'Comeback from 2019, need',
+    'Seem unbothered, help', 'Petty sticky note, office', 'Win a chat nobody started', 'A review that’s not a lie',
+  ],
+  money: [
+    'Explain my bank statement', 'Budget: just don’t spend?', 'Crypto, but I have $12', 'Negotiate a raise, help',
+    'Split a bill, no math', 'What’s a Roth IRA', 'Is coffee the real problem',
   ],
 };
 
