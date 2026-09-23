@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Let Me AI That For You</title>
+  <meta name="description" content="For all those people who find it more convenient to ask you than to ask the AI.">
+  <meta property="og:title" content="Let Me AI That For You">
+  <meta property="og:description" content="Here, let me show you how to ask an AI. It's really not that hard.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ===== Create mode: build a link ===== -->
+  <main id="create" class="create" hidden>
+    <button id="langToggle" class="lang-toggle" type="button"></button>
+
+    <header class="hero">
+      <div class="logo">LM<span>AI</span>TFY</div>
+      <h1 data-i18n="title"></h1>
+      <p class="tagline" data-i18n="tagline"></p>
+    </header>
+
+    <form id="form" class="card" autocomplete="off">
+      <label for="prompt" class="label" data-i18n="promptLabel"></label>
+      <textarea id="prompt" rows="3" maxlength="2000" required data-i18n-placeholder="promptPlaceholder"></textarea>
+
+      <span class="label" data-i18n="pickAi"></span>
+      <div id="providers" class="providers" role="radiogroup"></div>
+      <p id="noPrefillNote" class="note" hidden></p>
+
+      <button class="btn primary" type="submit" data-i18n="generate"></button>
+
+      <div id="result" class="result" hidden>
+        <input id="link" class="link" readonly>
+        <div class="actions">
+          <button id="copyBtn" class="btn" type="button" data-i18n="copy"></button>
+          <a id="previewBtn" class="btn" target="_blank" rel="noopener" data-i18n="preview"></a>
+          <button id="shareBtn" class="btn" type="button" data-i18n="share"></button>
+        </div>
+      </div>
+    </form>
+
+    <footer class="footer" data-i18n="footer"></footer>
+  </main>
+
+  <!-- ===== Play mode: the condescending tutorial ===== -->
+  <main id="play" class="play" hidden>
+    <header class="play-head">
+      <a href="./" class="logo small">LM<span>AI</span>TFY</a>
+      <span class="rail" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </header>
+
+    <p id="caption" class="caption" aria-live="polite"><span class="step-badge"><span data-i18n="stepLabel"></span> <b id="stepNum">1</b></span> <span id="captionText"></span></p>
+
+    <div id="stage" class="stage">
+      <div id="window"></div>
+      <div id="keycap" class="keycap" hidden></div>
+      <svg id="cursor" class="cursor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 2l16 10-7 1.5L9.5 21z" fill="#fff" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <button id="skipBtn" class="skip" type="button" data-i18n="skip"></button>
+
+    <div id="final" class="final" hidden>
+      <div class="card final-card">
+        <h2 id="finalTitle"></h2>
+        <p id="finalSub"></p>
+        <button id="goBtn" class="btn primary" type="button"></button>
+        <p id="finalNote" class="note"></p>
+        <a href="./" class="make-own" data-i18n="makeOwn"></a>
+      </div>
+    </div>
+  </main>
+
+  <script src="icons.js"></script>
+  <script src="providers.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
